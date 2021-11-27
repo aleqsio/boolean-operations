@@ -5,18 +5,6 @@ import THREE, { BoxGeometry, Mesh, RepeatWrapping, TextureLoader } from "three";
 import { use2dHoles } from "./use2dHoles";
 import { vec, Vector } from "./utils";
 
-type Door = {
-  offset: number;
-  width?: number;
-  height?: number;
-};
-
-type Window = {
-  offset: number;
-  offsetY?: number;
-  width?: number;
-  height?: number;
-};
 const SCALE = 0.5;
 const UvScalelableGeometry = ({
   uvScale,
@@ -58,15 +46,19 @@ const UvScalelableGeometry = ({
         //   uvs.setXY(i + 3, -0.5, 0.3);
         // }
 
-        uvs.setXY(i, offset[0], offset[1] + faceUvScale[1] * SCALE);
+        uvs.setXY(i, offset[0] * SCALE, (offset[1] + faceUvScale[1]) * SCALE);
         uvs.setXY(
           i + 1,
-          offset[0] + faceUvScale[0] * SCALE,
-          offset[1] + faceUvScale[1] * SCALE
+          (offset[0] + faceUvScale[0]) * SCALE,
+          (offset[1] + faceUvScale[1]) * SCALE
         );
 
-        uvs.setXY(i + 2, offset[0], offset[1]);
-        uvs.setXY(i + 3, offset[0] + faceUvScale[0] * SCALE, offset[1]);
+        uvs.setXY(i + 2, offset[0] * SCALE, offset[1] * SCALE);
+        uvs.setXY(
+          i + 3,
+          (offset[0] + faceUvScale[0]) * SCALE,
+          offset[1] * SCALE
+        );
 
         //  let offset = isLeftFacing(i) ? leftOffset : rightOffset;
         //  const x1 = offset[0];
@@ -114,8 +106,8 @@ export default ({
     // [0.5, 0.6, 0.6, 0.8],
   ]);
   const props = useTexture({
-    map: "assets/Stylized_Bricks_001_basecolor.jpg",
-    // map: "assets/uv.png",
+    // map: "assets/Stylized_Bricks_001_basecolor.jpg",
+    map: "assets/uv.png",
     aoMap: "assets/Stylized_Bricks_001_ambientOcclusion.jpg",
     // "assets/Stylized_Bricks_001_height.png",
     normalMap: "assets/Stylized_Bricks_001_normal.jpg",
@@ -156,21 +148,12 @@ export default ({
               width,
             ]}
             offsets={[
-              [
-                SCALE * length * (1 - rectangle[2]),
-                SCALE * height * rectangle[1],
-              ],
-              [
-                SCALE * length * (1 - rectangle[2]),
-                SCALE * height * rectangle[1],
-              ],
-              [SCALE * length * rectangle[0], 1 - SCALE * width],
-              [SCALE * length * (1 - rectangle[2]), 1 - SCALE * width],
-              [SCALE * length * rectangle[0], SCALE * height * rectangle[1]],
-              [
-                SCALE * length * (1 - rectangle[2]),
-                SCALE * height * rectangle[1],
-              ],
+              [length * (1 - rectangle[2]), height * rectangle[1]],
+              [length * (1 - rectangle[2]), height * rectangle[1]],
+              [length * rectangle[0], 1 - width],
+              [length * (1 - rectangle[2]), 1 - width],
+              [length * rectangle[0], height * rectangle[1]],
+              [length * (1 - rectangle[2]), height * rectangle[1]],
             ]}
             // leftOffset={[
             //   SCALE * length * rectangle[0],
